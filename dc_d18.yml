@@ -33,8 +33,11 @@ services:
             MYSQL_DATABASE: "dolibarr18"
             MYSQL_USER_FILE: "/run/secrets/mysql-user"
             MYSQL_PASSWORD_FILE: "/run/secrets/mysql-password"
+        ports:
+            - "3318:3306"
         networks:
             - in-pod
+            - ex-pod
 
     cron18:
         build:
