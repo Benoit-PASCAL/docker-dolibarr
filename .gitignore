@@ -1,3 +1,7 @@
 .idea/
 .volumes/
 docker-compose-links/
+
+
+dolibarr/
+documents

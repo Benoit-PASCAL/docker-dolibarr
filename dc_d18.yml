@@ -23,23 +23,23 @@ secrets:
         file: ./examples/with-secrets/secrets/mysql_password.secret
 
 services:
-    mariadb:
+    mariadb18:
         image: mariadb:10.6.17
         secrets:
             - mysql-user
             - mysql-password
         environment:
             MYSQL_RANDOM_ROOT_PASSWORD: "1"
-            MYSQL_DATABASE: "dolibarr2"
+            MYSQL_DATABASE: "dolibarr18"
             MYSQL_USER_FILE: "/run/secrets/mysql-user"
             MYSQL_PASSWORD_FILE: "/run/secrets/mysql-password"
         networks:
             - in-pod
 
-    cron:
+    cron18:
         build:
-            context: ./images/19.0.2-php8.2
-        image: tuxgasy/dolibarr:19.0.2-php8.2
+            context: ./images/18.0.5-php8.1
+        image: tuxgasy/dolibarr:18.0.5
         secrets:
             - mysql-user
             - mysql-password
@@ -50,18 +50,18 @@ services:
             DOLI_DB_PASSWORD_FILE: /run/secrets/mysql-password
             DOLI_ADMIN_LOGIN: administrator
             DOLI_ADMIN_PASSWORD: admin456
-            DOLI_DB_HOST: mariadb
-            DOLI_DB_NAME: dolibarr2
+            DOLI_DB_HOST: mariadb18
+            DOLI_DB_NAME: dolibarr18
             DOLI_URL_ROOT: http://0.0.0.0
             WWW_USER_ID: 1000
             WWW_GROUP_ID: 1000
         networks:
             - in-pod
 
-    web:
+    web18:
         build:
-            context: ./images/19.0.2-php8.2
-        image: tuxgasy/dolibarr:19.0.2-php8.2
+            context: ./images/18.0.5-php8.1
+        image: tuxgasy/dolibarr:18.0.5
         secrets:
             - mysql-user
             - mysql-password
@@ -70,26 +70,26 @@ services:
               source: ./dolibarr/htdocs/custom
               target: /var/www/html/custom
             - type: bind
-              source: ./documents/doli20
+              source: ./documents/doli18
               target: /var/www/documents
-            - type: bind
-              source: ./dolibarr/htdocs
-              target: /var/www/htdocs
+#            - type: bind
+#              source: ./dolibarr18/htdocs
+#              target: /var/www/htdocs
         depends_on:
-            - mariadb
+            - mariadb18
         environment:
             DOLI_INSTANCE_UNIQUE_ID: xxxx
             DOLI_DB_USER_FILE: "/run/secrets/mysql-user"
             DOLI_DB_PASSWORD_FILE: "/run/secrets/mysql-password"
             DOLI_ADMIN_LOGIN: "administrator"
             DOLI_ADMIN_PASSWORD: "admin456"
-            DOLI_DB_HOST: mariadb
-            DOLI_DB_NAME: dolibarr2
+            DOLI_DB_HOST: mariadb18
+            DOLI_DB_NAME: dolibarr18
             DOLI_URL_ROOT: 'http://0.0.0.0'
             WWW_USER_ID: 1000
             WWW_GROUP_ID: 1000
         ports:
-            - "8080:80"
+            - "8088:80"
         networks:
             - in-pod
             - ex-pod
